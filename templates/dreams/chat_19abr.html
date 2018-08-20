@@ -1,0 +1,146 @@
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Chat - Dreampsy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat:500,600,700|Shadows+Into+Light+Two" rel="stylesheet">
+<link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    /*
+    personaje1='Arbol';
+    personaje2='Rio';
+    personaje3='Dreamspy';
+    peronnaje=personaje3;
+    $('document').ready(function(){
+        $('.caja_chat .swicher .tooltip span').html( personaje1 );   
+
+        //$('textarea.chat').attr('placeholder', 'Esbríbele a '+personaje2);   
+
+        
+    })*/
+    personaje3='Dreampsy';
+    peronnaje=personaje3;
+    var buho = 1;
+</script>
+<script src="{% static 'js/code.js' %}"></script>
+<script src="{% static 'js/historial.js' %}"></script>
+</head>
+
+<body >
+    <div id="max_box">
+        <div id="left_box">
+        	<div id="menu">
+            	<i class=" menu fa fa-bars" aria-hidden="true"></i>
+                <div class="logo none"><img src="{% static 'images/logo-dreamspy.png' %}" /></div>
+                <div class="ayuda"><i class="fa fa-question-circle" aria-hidden="true"></i></div>
+                <div id="persona_linea">
+                    <span id="perso"></span><span>{{ objetos.parrafo7 }}</span>
+                </div>
+            </div>
+            <div id="container" class="chat-page">
+                <div id="menu_flotante">
+                    <div class="user-tab">
+                        <i class="menu fa fa-chevron-left" aria-hidden="true"></i>
+                        <div class="logo"><img src="{% static 'images/logo-dreamspy.png' %}" /></div>
+                        <div class="clear"></div>
+
+                        <div class="user-name"><i class="fa fa-user-o" aria-hidden="true"></i> <div class="info_name"> {{ user.username }} <span>{{cant_sueno}} Sueños</span></div></div>
+                    </div>
+                    <ul>
+                        <li><a href="/">Crear un sueño</a></li>
+                        <li><a id="lang_chooser">Idiomas</a></li>
+                        <li id="menu_lang">
+                        <ul>
+                        {% for idioma in idiomas %}
+                                <li><a href="#" id="lan_{{ idioma }}" class="idioma">{{ idioma }}</a></li>
+                        {% endfor %}
+                        </ul>
+                        </li>
+                        <li> <a href="{% url 'dreams:mis_suenos' %}">Mis sueños</a> </li>
+                        
+                    </ul>
+                    <div class="log_out"><a href="{% url 'logout' %}">Cerrar sesion</a> </div>
+                </div>
+                <div id="menu_overlay"></div>
+                <div class="online"><span><i class="fa fa-circle" aria-hidden="true"></i> p2 esta conectado</span> <span><i class="fa fa-circle" aria-hidden="true"></i> p1 esta conectado</span></div>
+                <div class="chat_massage">
+                    <img class="active" src="{% static 'images/buho_top.png' %}">
+
+                    <div class="massage_inner">
+
+                        <span id="texto1"  class="block"><span id="txt1">{{ objetos.buho1 }}</span> <button class="btn_buho">{{ objetos.btn_continuar }}</button></span>
+                        <span id="texto2" class="block"><span id="txt2">{{ objetos.buho2 }}</span><button class="btn_buho">{{ objetos.btn_continuar }}</button></span>
+                        <span id="texto3" class="block"><span id="txt3">{{ objetos.buho3 }}</span><button class="btn_buho">{{ objetos.btn_continuar }}</button></span>
+                        <span id="texto4" class="block"><span id="txt4">{{ objetos.buho4 }}</span> <button class="btn_buho">{{ objetos.btn_continuar }}</button></span>
+                        <span id="texto5" class="block"><span id="txt5">{{ objetos.buho5 }}</span><button class="btn_buho">{{ objetos.btn_continuar }}</button></span>
+                        <span id="texto6" class="block"><span id="txt6">{{ objetos.buho6 }}</span><button class="btn_buho">{{ objetos.btn_continuar }}</button></span>
+                        <span id="texto8" class="block">{{ objetos.pregunta_personaje }}</span>
+                    </div>
+                    <img class="active" src="{% static 'images/buho_top.png' %}">
+                </div>
+                <div id="chat_overlay" class="overlay"></div><!-- quite la clase active-->
+                <div id="instruccion" class="overlay instruccion active">
+                	<h4>{{ objetos.instruccion_p1 }}</h4>
+                    <button id="p1">{{ objetos.btn_personaje1 }}</button>
+                </div>
+                <div id="instruccion_personaje2" class="overlay instruccion">
+                	<h4>{{ objetos.instruccion_p1 }}</h4>
+                    <button id="p2">{{ objetos.btn_personaje5 }}</button>
+                </div>
+                <div class="swicher_top" id="top_personajes"><i class="fa fa-circle verde_online" aria-hidden="true"></i> {{ objetos.parrafo8 }} <span id="personaje_activo"></span></div>
+            	<div class="chats" id="chats">
+                    {% if historial %}
+                        <span id="historial">{{ historial.contenido }}</span>
+                        <span id="his_per1">{{ historial.dream.personaje1 }}</span>
+                        <span id="his_per2">{{ historial.dream.personaje2 }}</span>
+                        <span id="his_buho">{{ historial.buho }}</span>
+
+
+                     {% else %}
+                        <span id="his_per1">{{ my_dream.personaje1 }}</span>
+                        <span id="his_per2">{{ my_dream.personaje2 }}</span>
+                        <div class="chats_inner">
+                            <span id="instruccio1" class="instruccion_buho">
+                                Hola, Arbol ¿Como estas? se poco sobre ti por favor describite
+                            </span>
+                        </div>
+                    {% endif %}
+
+                	
+                </div>
+                
+                <div class="caja_chat">
+                	<div class="swicher"><i class="fa fa-circle" aria-hidden="true"></i><div class="tooltip"><i class="fa fa-caret-down" aria-hidden="true"></i><span>Personaje 1</span></div></div>
+                	<textarea id="text" class="chat" placeholder="{{ objetos.placeholder_chat }}"></textarea>
+                    <select id="respuestas_p1" class="respuesta">
+
+                        <option>...</option>
+                        <option>{{ objetos.opcion2 }}</option>
+                        <option>{{ objetos.opcion3 }}</option>
+                        <option>{{ objetos.opcion4 }}</option>
+                    </select>
+                    <select id="respuestas_p2" class="respuesta">
+
+                        <option>...</option>
+                        <option>{{ objetos.opcion2 }}</option>
+                        <option>{{ objetos.opcion3 }}</option>
+                        <option>{{ objetos.opcion4 }}</option>
+                    </select>
+               	 	<div id="sender_buho"></div>
+                    <div id="sender"></div>
+                </div>                
+                <!--<div class="centered none"><a class="bot" href="personajes-agradable.html">Continuar</a></div>-->
+            </div>
+            <div id="footer"></div>
+        </div>
+        <div class="foo-help" id="right_box"><i class="fa fa-angle-down" aria-hidden="true"></i><i class="fa fa-question-circle" aria-hidden="true"></i>
+<span class="ayu8">{{ objetos.ayuda8 }}</span></div>
+    </div>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

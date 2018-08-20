@@ -1,0 +1,375 @@
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Chat - Dreampsy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat:500,600,700|Shadows+Into+Light+Two" rel="stylesheet">
+<link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    /*
+    personaje1='Arbol';
+    personaje2='Rio';
+    personaje3='Dreamspy';
+    peronnaje=personaje3;
+    $('document').ready(function(){
+        $('.caja_chat .swicher .tooltip span').html( personaje1 );   
+
+        //$('textarea.chat').attr('placeholder', 'Esbríbele a '+personaje2);   
+
+        
+    })*/
+    personaje3='Dreampsy';
+    peronnaje=personaje3;
+    var buho = 1;
+    var personaje1 = localStorage.getItem('p1');
+    var personaje2= localStorage.getItem('p2');
+
+
+</script>
+<script src="{% static 'js/code.js' %}"></script>
+<script src="{% static 'js/historial.js' %}"></script>
+
+<style type="text/css">    
+    #secuencia_chat{
+        margin:0;
+        padding: 0;
+    }
+    #secuencia_chat li{
+        margin:0;
+        padding: 0;
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width:100%;
+        height: 100%;
+        opacity: 0;
+        /*transition: opacity, left .5s;
+        display: none;*/
+        z-index: 20;
+    }
+    #secuencia_chat li.active{
+        opacity: 1;
+        left: 0%;
+    }
+    #secuencia_chat .buhito .buhito_dice{
+        width: 80%;
+        min-height: 140px;
+        background: #fff;
+        left: 5%;
+        position: absolute;
+        bottom: -580px;
+        padding: 5%;
+        z-index: 100;
+        border-radius: 10px;
+        transition: bottom .5s;
+        /*transition-delay: 2s;*/
+    }
+    #secuencia_chat .buhito.active .buhito_dice{
+        bottom: 180px;
+    }
+
+    #secuencia_chat .buhito .overlay{
+        height: 0%;
+        background: #000000;
+        transition: height .5s;
+        /*transition-delay: 2s;*/
+    }
+    #secuencia_chat .buhito.active .overlay{
+        left: 0;
+        height: 100%;
+        opacity: .7;
+    }
+    #secuencia_chat .buhito img{
+        bottom: -50px;
+        position: fixed;
+        max-width: auto;
+        height: 0;
+        opacity: 0;
+        z-index: 101;
+        transition: all .3s;
+        /*transition-delay: 2s;*/
+    }
+    #secuencia_chat .buhito.active img{
+        height: 250px;
+        opacity: 1;
+    }
+    #secuencia_chat .instruccion h4{
+        padding: 5%;
+
+    }
+    .instruccion_buho, .per1, .per2{
+        clear: both;
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-size: 13px;
+        padding: 5px;
+        border-radius: 4px;
+        box-shadow: 2px 2px 2px #0005;
+        position: relative;
+        max-width: 90%;
+    }
+</style>
+
+</head>
+
+<body >
+    <div id="max_box">
+        <div id="left_box">
+        	<div id="menu">
+            	<i class=" menu fa fa-bars" aria-hidden="true"></i>
+                <div class="logo none"><img src="{% static 'images/logo-dreamspy.png' %}" /></div>
+                <div class="ayuda"><i class="fa fa-question-circle" aria-hidden="true"></i></div>
+                <div id="persona_linea">
+                    <span id="perso"></span><span>{{ objetos.parrafo7|safe }}</span>
+                </div>
+            </div>
+            <div id="container" class="chat-page">
+                <div id="menu_flotante">
+                    <div class="user-tab">
+                        <i class="menu fa fa-chevron-left" aria-hidden="true"></i>
+                        <div class="logo"><img src="{% static 'images/logo-dreamspy.png' %}" /></div>
+                        <div class="clear"></div>
+
+                        <div class="user-name"><i class="fa fa-user-o" aria-hidden="true"></i> <div class="info_name"> {{ user.username|safe }} <span>{{cant_sueno|safe }} Sueños</span></div></div>
+                    </div>
+                    <ul>
+                        <li><a href="/">Crear un sueño</a></li>
+                        <li><a id="lang_chooser">Idiomas</a></li>
+                        <li id="menu_lang">
+                        <ul>
+                        {% for idioma in idiomas %}
+                                <li><a href="#" id="lan_{{ idioma }}" class="idioma">{{ idioma }}</a></li>
+                        {% endfor %}
+                        </ul>
+                        </li>
+                        <li> <a href="{% url 'dreams:mis_suenos' %}">Mis sueños</a> </li>
+                        
+                    </ul>
+                    <div class="log_out"><a href="{% url 'logout' %}">Cerrar sesion</a> </div>
+                </div>
+                <div id="menu_overlay"></div>
+                <div class="online"><span><i class="fa fa-circle" aria-hidden="true"></i> p2 esta conectado</span> <span><i class="fa fa-circle" aria-hidden="true"></i> p1 esta conectado</span></div>
+                    
+
+                <ul id="secuencia_chat" style="margin:0; padding:0;">
+
+                    <li class="instruccion overlay active" data-user="---" data-online="---">
+                        <h4 class="texto_instruccion"> {{ objetos.instruccion_p1|safe }} </h4>
+                        <button id="p1" class="btn_inst">{{ objetos.btn_personaje1|safe }}</button> 
+                        <div class="overlay"></div>
+                    </li>
+
+                    <li class="buhito" data-user="Dreampsy" data-online="P1">
+                        <span class="buhito_dice">
+                            <div class="write_text">{{ objetos.buho1|safe }}  <span class="write_cont none"> {{ objetos.sub_buho1|safe }}  </span></div>
+                            <button data-next="1" class="btn_buho">{{ objetos.btn_continuar|safe }}</button>
+                        </span>
+                        <img src="{% static 'images/buho_top.png' %}" /> 
+                        <div class="overlay"></div>
+                    </li>
+
+                    <li class="buhito" data-user="Dreampsy" data-online="P1"> 
+                        <span class="buhito_dice">
+                            <div class="write_text">{{ objetos.buho2|safe }} <span class="write_cont none"> {{ objetos.sub_buho2|safe }}  </span></div>
+                            <button data-next="1" class="btn_buho">{{ objetos.btn_continuar|safe }}</button>
+                        </span>
+                        <img src="{% static 'images/buho_top.png' %}" /> 
+                        <div class="overlay"></div>
+                    </li>
+
+                    <li class="instruccion overlay" data-user="Dreampsy" data-online="P1"> 
+                        <h4 class="texto_instruccion"> {{ objetos.instruccion_p2|safe }}  </h4>
+                        <button id="p2" class="btn_inst">{{ objetos.btn_personaje5|safe }} </button> 
+                        <div class="overlay"></div>
+                    </li>
+
+                    <li class="buhito" data-user="Dreampsy" data-online="P2">
+                        <span class="buhito_dice">
+                            <div class="write_text">{{ objetos.buho3|safe }} <span class="write_cont none"> {{ objetos.sub_buho3|safe }}  </span></div>
+                            <button data-next="2" class="btn_buho">{{ objetos.btn_continuar|safe }}</button>
+                        </span>
+                        <img src="{% static 'images/buho_top.png' %}" /> 
+                        <div class="overlay"></div>
+                    </li>
+
+                    <li class="buhito" data-user="Dreampsy" data-online="P2">
+                        <span class="buhito_dice">
+                            <div class="write_text">{{ objetos.buho4|safe }} <span class="write_cont none"> {{ objetos.sub_buho4|safe }}  <!--- {{ objetos.pregunta_personaje }}-->  </span></div>
+                            <button data-next="2" class="btn_buho">{{ objetos.btn_continuar|safe }}</button>
+                        </span>
+                        <img src="{% static 'images/buho_top.png' %}" /> 
+                        <div class="overlay"></div>
+                    </li>
+
+                    <li class="instruccion overlay"  data-user="P1" data-online="P2">
+                        <h4 class="texto_instruccion"> {{ objetos.instruccion_3|safe }}  </h4>
+                        <button id="p3" class="btn_inst">{{ objetos.btn_personaje1|safe }}</button> 
+                        <div class="overlay"></div>
+                    </li>
+
+                    <li class="buhito"  data-user="P2" data-online="P1" data-pregunta="1"> 
+                        <span class="buhito_dice">
+                            <div class="write_text">{{ objetos.buho5|safe }} <span class="write_cont none"> {{ objetos.sub_buho5|safe }}   </span></div>
+                            <button data-next="1" class="btn_buho">{{ objetos.btn_continuar|safe }}</button>
+                        </span>
+                        <img src="{% static 'images/buho_top.png' %}" /> 
+                        <div class="overlay"></div>
+
+                        <div class="pregunta_personaje">{{ objetos.pregunta_personaje|safe  }}</div>
+
+                    </li>
+
+                    <li class="instruccion overlay" data-user="P2" data-online="P1" >
+                        <h4 class="texto_instruccion"> {{ objetos.instruccion_4|safe }}  </h4>
+                        <button id="p4" class="btn_inst">{{ objetos.btn_personaje5|safe }}</button> 
+                        <div class="overlay"></div>
+                    </li>
+
+                    <li class="buhito" data-user="P1" data-online="P2" >
+                        <span class="buhito_dice">
+                            <div class="write_text">{{ objetos.buho6|safe }} <span class="write_cont none"> {{ objetos.sub_buho6|safe }}  </span></div>
+                            <button data-next="2" class="btn_buho">{{ objetos.btn_continuar|safe }}</button>
+                        </span>
+                        <img src="{% static 'images/buho_top.png' %}" />
+                        <div class="overlay"></div>
+                    </li>
+
+                    <li class="instruccion overlay" data-user="P2" data-online="P1" >
+                        <h4 class="texto_instruccion"> {{ objetos.instruccion_5|safe }}  </h4>
+                        <button id="p5" data-next="1" class="btn_inst">{{ objetos.btn_personaje1|safe }}</button>
+                        <div class="overlay"></div>
+                    </li>
+
+                    <li class="instruccion overlay" data-user="P1" data-online="P2" >
+                        <h4 class="texto_instruccion"> {{ objetos.instruccion_6|safe }}  </h4>
+                        <button id="p6" data-next="2">{{ objetos.btn_personaje5|safe }}</button>
+                        <div class="overlay"></div>
+                    </li>
+
+                    <li class="instruccion overlay" data-user="P1" data-online="P2" >
+                        <h4 class="texto_instruccion"> {{ objetos.instruccion_7|safe }}  </h4>
+                        <button id="p7" data-next="1">{{ objetos.btn_personaje1|safe }}</button>
+                        <div class="overlay"></div>
+                    </li>
+
+                </ul>
+
+                <div class="chat_massage">
+                    <img class="active" src="{% static 'images/buho_top.png' %}">
+
+                    <div class="massage_inner">
+
+                        <!--<span id="texto1"  class="block"><span id="txt1">{{ objetos.buho1|safe }}</span> <button class="btn_buho">{{ objetos.btn_continuar }}</button></span>-->
+                        <!--<span id="texto2" class="block"><span id="txt2">{{ objetos.buho2|safe }}</span><button class="btn_buho">{{ objetos.btn_continuar }}</button></span>
+                        <span id="texto3" class="block"><span id="txt3">{{ objetos.buho3|safe }}</span><button class="btn_buho">{{ objetos.btn_continuar }}</button></span>
+                        <span id="texto4" class="block"><span id="txt4">{{ objetos.buho4|safe }}</span> <button class="btn_buho">{{ objetos.btn_continuar }}</button></span>
+                        <span id="texto5" class="block"><span id="txt5">{{ objetos.buho5|safe }}</span><button class="btn_buho">{{ objetos.btn_continuar }}</button></span>
+                        <span id="texto6" class="block"><span id="txt6">{{ objetos.buho6|safe }}</span><button class="btn_buho">{{ objetos.btn_continuar }}</button></span>-->
+                        <span id="texto8" class="block">{{ objetos.pregunta_personaje }}</span>
+                        <!--sub buhos que van dentro del chat -->
+                        <span id="sub_buho1">{{ objetos.sub_buho1|safe }}</span>
+                        <span id="sub_buho2">{{ objetos.sub_buho2|safe }}</span>
+                        <span id="sub_buho3">{{ objetos.sub_buho3|safe }}</span>
+                        <span id="sub_buho4">{{ objetos.sub_buho4|safe }}</span>
+                        <span id="sub_buho5">{{ objetos.sub_buho5|safe }}</span>
+                        <span id="sub_buho6">{{ objetos.sub_buho6|safe }}</span>
+                        <span id="instruccion3">{{ objetos.instruccion_3|safe }}</span>
+                        <span id="instruccion4">{{ objetos.instruccion_4|safe }}</span>
+                        <span id="instruccion5">{{ objetos.instruccion_5|safe }}</span>
+                        <span id="instruccion6">{{ objetos.instruccion_6|safe }}</span>
+                        <span id="instruccion7">{{ objetos.instruccion_7|safe }}</span>
+                    </div>
+                    <img class="active" src="{% static 'images/buho_top.png' %}">
+                </div>
+                <div id="chat_overlay" class="overlay none"></div><!-- quite la clase active-->
+                <div id="instruccion" class="overlay instruccion active none">
+                	<h4 class="texto_instruccion">{{ objetos.instruccion_p1|safe }} </h4>
+                    <button id="p1">{{ objetos.btn_personaje1|safe }}</button>
+                </div>
+                <div id="instruccion_personaje2" class="overlay instruccion">
+                	<h4 class="texto_instruccion2">{{ objetos.instruccion_p1|safe }}</h4>
+                    <button id="p2">{{ objetos.btn_personaje5|safe }}</button>
+                </div>
+                <div class="swicher_top" id="top_personajes"><i class="fa fa-circle verde_online" aria-hidden="true"></i> {{ objetos.parrafo8|safe }} <span id="personaje_activo"></span></div>
+            	<div class="chats" id="chats">
+                     {% if historial %}
+                        <span id="historial">{{ historial.contenido|safe }}</span>
+                        <span id="his_per1">{{ historial.dream.personaje1|safe }}</span>
+                        <span id="his_per2">{{ historial.dream.personaje2|safe }}</span>
+                        <span id="his_buho">{{ historial.buho|safe }}</span>
+
+
+                     {% else %}
+                        <span id="his_per1">{{ my_dream.personaje1|safe }}</span>
+                        <span id="his_per2">{{ my_dream.personaje2|safe }}</span>
+                        <div class="chats_inner">
+                            <!--<span id="instruccio1" class="instruccion_buho none">
+                                Hola, <span class="per_p1">Arbol</span> ¿Como estas? se poco sobre ti por favor describite
+                            </span>-->
+                        </div>
+                    {% endif %}
+
+                	
+                </div>
+                
+                <div class="caja_chat">
+                	<div class="swicher"><i class="fa fa-circle" aria-hidden="true"></i><div class="tooltip"><i class="fa fa-caret-down" aria-hidden="true"></i><span>Personaje 1</span></div></div>
+                	<textarea id="text" class="chat" placeholder="{{ objetos.placeholder_chat|safe }}"></textarea>
+                    <select id="respuestas_p1" class="respuesta">
+
+                        <option>...</option>
+                        <option>{{ objetos.opcion2|safe }}</option>
+                        <option>{{ objetos.opcion3|safe }}</option>
+                        <option>{{ objetos.opcion4|safe }}</option>
+                    </select>
+                    <select id="respuestas_p2" class="respuesta">
+
+                        <option>...</option>
+                        <option>{{ objetos.p2_opcion2|safe }}</option>
+                        <option>{{ objetos.p2_opcion3|safe }}</option>
+                        <option>{{ objetos.p2_opcion4|safe }}</option>
+                    </select>
+               	 	<div id="sender_buho"></div>
+                    <div id="sender"></div>
+                </div>                
+                <!--<div class="centered none"><a class="bot" href="personajes-agradable.html">Continuar</a></div>-->
+            </div>
+            <div id="footer"></div>
+        </div>
+        <div class="foo-help" id="right_box"><i class="fa fa-angle-down" aria-hidden="true"></i><i class="fa fa-question-circle" aria-hidden="true"></i>
+<span class="ayu8">{{ objetos.ayuda8|safe }}</span></div>
+    </div>
+    <script> 
+
+        
+   
+
+
+        console.log( jQuery('#secuencia_chat li').attr('class') ); 
+
+    jQuery('#secuencia_chat li').each(function(){
+        console.log( $(this).attr('data-online') ,"$(this).attr('data-online')")
+       
+        if(jQuery(this).attr('data-online')=='P1'){
+            jQuery(this).attr('data-online',personaje1)
+        }
+        if(jQuery(this).attr('data-online')=='P2'){
+            jQuery(this).attr('data-online',personaje2)
+        }
+        if(jQuery(this).attr('data-user')=='P1'){
+            jQuery(this).attr('data-user',personaje1)
+        }
+        if(jQuery(this).attr('data-user')=='P2'){
+            jQuery(this).attr('data-user',personaje2)
+        }
+    })
+</script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

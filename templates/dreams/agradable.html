@@ -1,0 +1,60 @@
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Sueño - Agradable</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="https://fonts.googleapis.com/css?family=Montserrat:500,600,700|Shadows+Into+Light+Two" rel="stylesheet">
+<link href="{% static  'css/font-awesome.css'%}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+    <div id="max_box">
+        <div id="left_box">
+        	<div id="menu">
+            	<i class=" menu fa fa-bars" aria-hidden="true"></i>
+                <div class="logo"><img src="{% static 'images/logo-dreamspy.png' %}" /></div>
+                <div class="ayuda"><i class="fa fa-question-circle" aria-hidden="true"></i></div>
+            </div>
+            <div id="container" class="topped">
+
+                <div id="menu_flotante">
+                    <div class="user-tab">
+                        <i class="menu fa fa-chevron-left" aria-hidden="true"></i>
+                        <div class="logo"><img src="{% static 'images/logo-dreamspy.png' %}" /></div>
+                        <div class="clear"></div>
+
+                        <div class="user-name"><i class="fa fa-user-o" aria-hidden="true"></i> <div class="info_name"> {{ user.username }} <span>{{cant_sueno}} Sueños</span></div></div>
+                    </div>
+                    <ul>
+                        <li><a href="/">Crear un sueño</a></li>
+                        <li><a id="lang_chooser">Idiomas</a></li>
+                        <li id="menu_lang">
+                        <ul>
+                        {% for idioma in idiomas %}
+                                <li><a href="#" id="lan_{{ idioma }}" class="idioma">{{ idioma }}</a></li>
+                        {% endfor %}
+                        </ul>
+                        </li>
+                        <li> <a href="{% url 'dreams:mis_suenos' %}">Mis sueños</a> </li>
+                        
+                    </ul>
+                    <div class="log_out"><a href="{% url 'logout' %}">Cerrar sesion</a> </div>
+                </div>
+                <div id="menu_overlay" ></div>
+
+                <div class="agradable"><div class="spacer"></div><img src=" {% static 'images/happy.png' %}" /><div class="es-title t2">{{ objetos.sub_pregunta2|safe }}</div><div class="spacer"></div></div>
+
+                <div class="desescribir"><textarea class="renglones" placeholder="{{ objetos.placeholder|safe }}"></textarea><div class="centered"><a class="bot boton">{{ objetos.btn_continuar }}</a></div><div class="spacer"></div></div>
+            </div>
+        </div>
+        <div class="foo-help" id="right_box"><i class="fa fa-angle-down" aria-hidden="true"></i><i class="fa fa-question-circle" aria-hidden="true"></i><span id="ayuda ayu4">{{ objetos.ayuda4|safe }}</span> </div>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src=" {% static 'js/code.js' %}"></script>
+<script src=" {% static 'js/main.js' %}"></script>
+</html>

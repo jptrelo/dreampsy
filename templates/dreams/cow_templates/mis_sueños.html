@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% for dream in dreams %}
+        {% if dream.personaje1 and dream.personaje2 %}
+            <ul>
+                {% if dream.agradable %}
+                    <li> <span>sin chat</span><a href="{% url 'dreams:detalle_sueño' dream.pk %}">Sueño agradable #</a></li>
+                    personaje 1 {{ dream.personaje1 }} - Personaje 2 {{ dream.personaje2 }} - descripcion {{ dream.descripcion }}
+                {% else %}
+                    <li><span>sin chat</span><a href="{% url 'dreams:detalle_sueño' dream.pk %}">Sueño agradable # </a></li>
+                    personaje 1 {{ dream.personaje1 }} - Personaje 2 {{ dream.personaje2 }} - descripcion {{ dream.descripcion }}
+                {% endif %}
+            </ul>
+        {% endif %}
+
+    {% endfor %}
+
+</body>
+</html>
